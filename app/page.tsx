@@ -3,8 +3,8 @@ import { HeroSection } from "@/components/hero-section"
 import { LogoBar } from "@/components/logo-bar"
 import { ServicesSection } from "@/components/services-section"
 import { ProcessSection } from "@/components/process-section"
-import { ResultsSection } from "@/components/results-section"
-import { StatsSection } from "@/components/stats-section"
+import { WhyUsSection } from "@/components/why-us-section"
+import { FaqSection } from "@/components/faq-section"
 import { BookingSection } from "@/components/booking-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
@@ -18,8 +18,8 @@ export default function Home() {
         <LogoBar />
         <ServicesSection />
         <ProcessSection />
-        <ResultsSection />
-        <StatsSection />
+        <WhyUsSection />
+        <FaqSection />
         <BookingSection />
         <ContactSection />
       </main>

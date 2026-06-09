@@ -22,11 +22,20 @@ const perks = [
 ]
 
 const industries = [
-  "Rørlegger",
-  "Elektriker",
-  "Tømrer / Snekker",
   "Maler",
   "Flislegger",
+  "Gulvlegger",
+  "Glassmester",
+  "Elektriker",
+  "Rørlegger",
+  "Ventilasjon / VVS",
+  "Varmepumpe",
+  "Tømrer / Snekker",
+  "Blikkenslager",
+  "Taktekker",
+  "Murer",
+  "Anleggsgartner",
+  "Betong & grunnarbeid",
   "Annet håndverk",
 ]
 
@@ -85,12 +94,24 @@ export function BookingSection() {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch("/api/booking", {
+      const response = await fetch("https://formsubmit.co/ajax/Roberts@solidmarketing.no", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          Fornavn: formData.firstName,
+          Etternavn: formData.lastName,
+          "E-post": formData.email,
+          Telefon: formData.phone,
+          Bransje: formData.industry,
+          "Ønsket tidspunkt": formData.datetime,
+          Melding: formData.message,
+          _cc: "Ludvig@solidmarketing.no",
+          _subject: "Ny henvendelse fra Solidmarketing.no",
+          _template: "table",
+        }),
       })
 
       if (!response.ok) {

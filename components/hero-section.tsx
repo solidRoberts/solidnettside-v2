@@ -1,77 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
-
-function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0)
-  const ref = useRef<HTMLDivElement>(null)
-  const hasAnimated = useRef(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true
-          let current = 0
-          const increment = target / 60
-          const timer = setInterval(() => {
-            current = Math.min(current + increment, target)
-            setCount(Math.round(current))
-            if (current >= target) clearInterval(timer)
-          }, 25)
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => observer.disconnect()
-  }, [target])
-
-  return (
-    <div ref={ref} className="font-serif text-[44px] font-bold text-[#4f52e8] leading-none">
-      {count}
-      {suffix && <span className="text-[22px]">{suffix}</span>}
-    </div>
-  )
-}
-
-function ProgressBar({ targetWidth }: { targetWidth: string }) {
-  const [width, setWidth] = useState("0%")
-  const ref = useRef<HTMLDivElement>(null)
-  const hasAnimated = useRef(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true
-          setTimeout(() => setWidth(targetWidth), 500)
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => observer.disconnect()
-  }, [targetWidth])
-
-  return (
-    <div ref={ref} className="h-1.5 bg-border rounded-sm mt-3.5 overflow-hidden">
-      <div
-        className="h-full bg-gradient-to-r from-[#4f52e8] to-[#6366f1] rounded-sm transition-all duration-[1500ms] ease-out"
-        style={{ width }}
-      />
-    </div>
-  )
-}
+import { BarChart3, Eye } from "lucide-react"
 
 export function HeroSection() {
   return (
@@ -117,30 +47,24 @@ export function HeroSection() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Wide card */}
               <div className="sm:col-span-2 bg-white border border-border rounded-2xl p-6 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)] transition-all">
-                <AnimatedCounter target={248} />
-                <div className="text-[13px] text-muted-foreground mt-1.5 font-medium">
-                  Leads generert for håndverksbedrifter
+                <div className="w-11 h-11 rounded-xl bg-[rgba(79,82,232,0.09)] flex items-center justify-center text-[#4f52e8] mb-3.5">
+                  <BarChart3 size={22} />
                 </div>
-                <div className="flex items-end gap-1 h-9 mt-3">
-                  {[35, 50, 42, 68, 58, 82, 100].map((height, i) => (
-                    <div
-                      key={i}
-                      className={`w-[11px] rounded-t-sm bg-[#4f52e8] ${height === 100 ? "opacity-100" : "opacity-20"}`}
-                      style={{ height: `${height}%` }}
-                    />
-                  ))}
+                <div className="text-base font-bold text-foreground leading-snug">Meta Ads</div>
+                <div className="text-[13px] text-muted-foreground mt-1 font-medium leading-relaxed">
+                  Facebook- &amp; Instagram-annonser skreddersydd for håndverkere
                 </div>
               </div>
 
-              {/* Percentage card */}
+              {/* Transparency card */}
               <div className="bg-white border border-border rounded-2xl p-6 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)] transition-all">
-                <div className="font-serif text-[44px] font-bold text-[#7b5ea7] leading-none">
-                  <AnimatedCounter target={62} suffix="%" />
+                <div className="w-11 h-11 rounded-xl bg-[rgba(79,82,232,0.09)] flex items-center justify-center text-[#4f52e8] mb-3.5">
+                  <Eye size={22} />
                 </div>
-                <div className="text-[13px] text-muted-foreground mt-1.5 font-medium">
-                  Lavere kostnad per lead
+                <div className="text-base font-bold text-foreground leading-snug">Full åpenhet</div>
+                <div className="text-[13px] text-muted-foreground mt-1 font-medium leading-relaxed">
+                  Du ser hva budsjettet brukes på
                 </div>
-                <ProgressBar targetWidth="72%" />
               </div>
 
               {/* Tags card */}

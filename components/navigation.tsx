@@ -20,7 +20,8 @@ export function Navigation() {
   const navLinks = [
     { href: "#tjenester", label: "Tjenester" },
     { href: "#prosess", label: "Prosess" },
-    { href: "#resultater", label: "Resultater" },
+    { href: "#hvorfor-oss", label: "Hvorfor oss" },
+    { href: "#faq", label: "FAQ" },
     { href: "#booking", label: "Book møte" },
     { href: "#kontakt", label: "Kontakt" },
   ]

@@ -5,7 +5,7 @@ export function LogoBar() {
     "·",
     "Akershus",
     "·",
-    "Meta Business Partner",
+    "Håndverksbedrifter",
     "·",
     "Resultatorientert",
   ]
