@@ -1,0 +1,472 @@
+/* Klassisk («bank/advokat», plan 5.6.1)
+   Hvit bakgrunn, mørk tekst og én dempet aksent (marine). Source Serif 4 i overskriftene, systemfont i brødteksten.
+   Strengt rutenett, tynne linjer og mye luft. Forbudslista i plan 5.6.3 gjelder og sjekkes av sjekk.mjs:
+   ingen gradienter, skygger, glød, lilla/indigo, mørke flater, animasjon, piller eller avrundede bokser. */
+
+@font-face{
+  font-family:"Source Serif 4";
+  src:url("/assets/fonts/source-serif-4-600-latin.woff2?v=d2ebdb22f2") format("woff2");
+  font-weight:600;font-style:normal;font-display:swap;
+}
+
+:root{
+  --bakgrunn:#FFFFFF;
+  --flate:#F4F5F7;          /* FAQ-seksjonen og footeren */
+  --tekst:#1B2230;          /* 15,9:1 på hvit */
+  --tekst-dempet:#4A5363;   /* 7,8:1 på hvit, 7,1:1 på flate */
+  --aksent:#1F3A5F;         /* marine: knapp, lenker, fokus, aksentstreker. 11,5:1 på hvit */
+  --aksent-hover:#152A47;
+  --linje:#D9DDE3;          /* bare dekor */
+  --feltkant:#6B7280;       /* 4,8:1, UI-grense rundt felt */
+  --feil:#A12A2A;           /* 7,3:1 */
+  --paa-aksent:#FFFFFF;     /* tekst på den fylte knappen, 11,5:1 */
+  --overskrift:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --brodtekst:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --marg:24px;
+  --luft:64px;
+}
+@media (min-width:960px){
+  :root{--marg:48px;--luft:96px}
+}
+
+/* ---------------------------------------------------------------- Grunnlag */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;background:var(--bakgrunn);color:var(--tekst);
+  font-family:var(--brodtekst);font-size:1.125rem;line-height:1.65;
+  overflow-wrap:anywhere;
+}
+img{max-width:100%;height:auto;display:block}
+h1,h2,h3{font-family:var(--overskrift);font-weight:600;color:var(--tekst);margin:0}
+
+/* Reflow (WCAG 1.4.10 og 1.4.12): et ord som er bredere enn skjermen («Personvernerklæring» i serif på 320 px,
+   eller et langt navn i kvitteringen) skal brytes, ikke gjøre siden bredere enn skjermen.
+   - overflow-wrap:anywhere (også på body over) teller med i min-content-bredden, så ett langt ord aldri kan
+     gjøre et rutenettspor bredere enn beholderen. Overskriftene får det eksplisitt, fordi kalkulatoren setter
+     break-word på sin egen beholder.
+   - Orddeling med bindestrek på smale skjermer (siden har lang="nb"), bare i lange ord.
+   - Alle rutenettbarn får min-width:0, så de kan krympe under innholdets egen bredde. Nye rutenett legges til
+     i lista (sjekk.mjs feiler på et rutenett som mangler). */
+h1,h2,h3,summary,legend{overflow-wrap:anywhere}
+@media (max-width:599px){
+  h1,h2,h3,summary{-webkit-hyphens:auto;hyphens:auto;hyphenate-limit-chars:10 4 4}
+}
+.hero-rutenett>*,.sidehode-rutenett>*,.bransjelinje>*,.tjenester>*,.tjenesteliste>*,.grunner>*,.fordeler>*,
+.seksjon--prosess .beholder>*,.seksjon--faq .beholder>*,.steg>*,.prosjekt>*,.personstripe>*,.personer>*,
+.faktaboks dl div>*,.skjermbilder>*,.kontaktvalg>*,.skjemafelt-rutenett>*,.sidebunn-rutenett>*,.teaser--med-bilde>*{min-width:0}
+h1{font-size:clamp(2.25rem,1.6rem + 2.6vw,3.5rem);line-height:1.12;letter-spacing:-.01em}
+h2{font-size:clamp(1.75rem,1.4rem + 1.4vw,2.5rem);line-height:1.2}
+h3{font-size:1.375rem;line-height:1.3}
+h1 em,h2 em,h3 em{font-style:italic}
+p,ul,ol,dl,figure,address,blockquote{margin:0}
+p{max-width:68ch}
+p + p{margin-top:1em}
+address{font-style:normal}
+a{color:var(--aksent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
+a:hover{color:var(--aksent-hover);text-decoration-thickness:2px}
+:focus-visible{outline:3px solid var(--aksent);outline-offset:2px}
+main:focus{outline:none}
+[hidden]{display:none!important}
+.kun-skjermleser{
+  position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+.hopp-lenke{
+  position:absolute;left:-10000px;top:12px;z-index:100;
+  background:var(--aksent);color:var(--paa-aksent);padding:.75rem 1rem;font-weight:600;
+}
+.hopp-lenke:focus{left:12px;color:var(--paa-aksent)}
+
+.beholder{max-width:calc(1200px + 2 * var(--marg));margin:0 auto;padding:0 var(--marg)}
+
+/* ---------------------------------------------------------------- Tekstbiter */
+.etikett{font-family:var(--brodtekst);font-size:.95rem;font-weight:400;color:var(--tekst-dempet);margin:0 0 16px}
+.innledning{color:var(--tekst-dempet);margin-top:16px}
+.innledning-stor{font-size:1.25rem;line-height:1.55;color:var(--tekst)}
+.seksjon-hode{max-width:760px;margin-bottom:48px}
+
+/* Lister med en liten firkant i aksentfargen i stedet for prikk (ingen ikoner). */
+.punkter,.sjekkliste,.bransjeliste{list-style:none;padding:0;margin:0}
+.punkter li,.sjekkliste li,.bransjeliste li{position:relative;padding-left:1.25rem;margin:.4rem 0}
+.punkter li::before,.sjekkliste li::before,.bransjeliste li::before{
+  content:"";position:absolute;left:0;top:.68em;width:0;height:0;border:3px solid var(--aksent);
+}
+
+/* ---------------------------------------------------------------- Knapper og lenker */
+.handlinger{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;margin-top:32px}
+.knapp{
+  display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+  padding:.75rem 1.5rem;border:1px solid var(--aksent);border-radius:2px;
+  font-family:var(--brodtekst);font-size:1rem;font-weight:600;line-height:1.25;text-align:center;
+  text-decoration:none;cursor:pointer;
+}
+.knapp--primar{background:var(--aksent);color:var(--paa-aksent)}
+.knapp--primar:hover{background:var(--aksent-hover);border-color:var(--aksent-hover);color:var(--paa-aksent)}
+.knapp--omriss{background:transparent;color:var(--aksent)}
+.knapp--omriss:hover{background:var(--flate);color:var(--aksent-hover)}
+button.knapp{font:inherit;font-weight:600;font-size:1rem}
+.knapp[aria-disabled="true"]{cursor:progress}
+.ringlenke{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+.pil-lenke{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+.pil-lenke::after{content:"\00a0\2192";content:"\00a0\2192" / "";text-decoration:none}
+.ringlinje{margin-top:20px;color:var(--tekst-dempet)}
+.ringlinje a{font-weight:600;white-space:nowrap}
+
+/* ---------------------------------------------------------------- Header (ikke sticky) */
+.sidetopp{border-bottom:1px solid var(--linje);background:var(--bakgrunn)}
+.sidetopp-rad{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0 16px;min-height:76px}
+.logo{display:inline-flex;align-items:center;min-height:44px;padding:8px 0}
+.logo img{height:42px;width:auto}
+.sidetopp-knapper{display:flex;align-items:center;gap:8px}
+.ringknapp,.menyknapp{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;min-width:44px;
+  padding:0 14px;border:1px solid var(--aksent);border-radius:2px;background:transparent;color:var(--aksent);
+  font:inherit;font-size:1rem;font-weight:600;text-decoration:none;cursor:pointer;
+}
+.menyknapp{border-color:var(--linje);color:var(--tekst)}
+.ringknapp:hover,.menyknapp:hover{background:var(--flate)}
+.ikon{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ikon-lukk{display:none}
+.meny-apen .ikon-meny{display:none}
+.meny-apen .ikon-lukk{display:inline}
+
+/* Mobil: menyen ligger i flyten under logoraden når den er åpen (ingen overlegg, ingen skygge). */
+.hovedmeny{display:none;flex-basis:100%;padding:8px 0 24px}
+.meny-apen .hovedmeny{display:block;border-top:1px solid var(--linje)}
+.menyliste{list-style:none;margin:0;padding:0}
+.menyliste li{border-bottom:1px solid var(--linje)}
+.menylenke{display:flex;align-items:center;min-height:52px;color:var(--tekst);text-decoration:none;font-weight:600}
+.menylenke:hover{color:var(--aksent);text-decoration:underline}
+.menylenke[aria-current="page"],.menylenke.er-aktiv-seksjon{color:var(--aksent);text-decoration:underline;text-decoration-thickness:2px}
+.knapp-topp{width:100%;margin-top:20px}
+
+/* Smale telefoner (under 360 px): logo, «Ring» og «Meny» får plass på én rad. */
+@media (max-width:359px){
+  .sidetopp-rad{gap:0 10px}
+  .logo img{height:34px}
+  .sidetopp-knapper{gap:6px}
+  .ringknapp,.menyknapp{padding:0 10px}
+  .menyknapp .ikon{display:none}
+}
+
+@media (min-width:960px){
+  .sidetopp-rad{flex-wrap:nowrap;min-height:88px}
+  .logo img{height:48px}
+  .sidetopp-knapper{display:none}
+  .hovedmeny{display:flex;align-items:center;gap:32px;flex-basis:auto;padding:0}
+  .meny-apen .hovedmeny{border-top:0}
+  .menyliste{display:flex;gap:28px}
+  .menyliste li{border:0}
+  .menylenke{min-height:44px;font-weight:400}
+  .knapp-topp{width:auto;margin:0}
+}
+
+/* Telefonnummeret som tekst ytterst til høyre i headeren, bare der det får plass på én rad (under det har
+   headeren «Ring»-knappen, eller menyen og «Book»). Ingen fylt knapp. */
+.topp-tlf{display:none}
+@media (min-width:1100px){
+  .hovedmeny{margin-left:auto}
+  .topp-tlf{
+    display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-left:12px;
+    color:var(--tekst);font-weight:600;text-decoration:none;white-space:nowrap;
+  }
+  .topp-tlf:hover{color:var(--aksent);text-decoration:underline}
+}
+
+/* ---------------------------------------------------------------- Brødsmuler */
+.brodsmuler{padding-top:24px;font-size:.95rem;color:var(--tekst-dempet)}
+.brodsmuler ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center}
+.brodsmuler li{display:inline-flex;align-items:center}
+.brodsmuler li + li::before{content:"/";content:"/" / "";margin:0 .6rem;color:var(--tekst-dempet)}
+.brodsmuler a{display:inline-flex;align-items:center;min-height:44px}
+
+/* ---------------------------------------------------------------- Seksjoner */
+.seksjon{padding:var(--luft) 0}
+.seksjon + .seksjon{border-top:1px solid var(--linje)}
+
+/* Forsidetoppen */
+.seksjon--hero{padding:48px 0 var(--luft)}
+.hero-rutenett{display:grid;gap:48px}
+.hero-tekst h1{max-width:16ch}
+.hero-bilde img{border:1px solid var(--linje);width:100%}
+figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-dempet);max-width:68ch}
+@media (min-width:960px){
+  .seksjon--hero{padding-top:72px}
+  .hero-rutenett{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center}
+  .hero-tekst{grid-column:1 / span 6}
+  .hero-bilde{grid-column:8 / span 5}
+}
+
+/* Undersidenes topp */
+.sidehode{padding:32px 0 var(--luft);border-bottom:1px solid var(--linje)}
+.sidehode-rutenett{display:grid;gap:40px}
+.sidehode h1{max-width:20ch}
+.sidehode .innledning-stor{margin-top:20px}
+.sidehode-bilde img{width:100%;border:1px solid var(--linje)}
+.sidehode + .seksjon{border-top:0}
+@media (min-width:960px){
+  .sidehode{padding-top:48px}
+  .sidehode--med-bilde .sidehode-rutenett{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center}
+  .sidehode--med-bilde .sidehode-tekst{grid-column:1 / span 6}
+  .sidehode--med-bilde .sidehode-bilde{grid-column:8 / span 5}
+}
+
+/* Bransjelinja: overskrift og én setning, side om side på PC */
+.bransjelinje{display:grid;gap:16px}
+.bransjelinje p{font-size:1.25rem;line-height:1.55}
+@media (min-width:960px){
+  .bransjelinje{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:baseline}
+  .bransjelinje h2{grid-column:1 / span 4}
+  .bransjelinje p{grid-column:6 / span 7}
+}
+
+/* Tjenestene: to spalter med en 2 px marine strek over. Ingen kort, ingen ikoner. */
+.tjenester{display:grid;gap:56px}
+.tjeneste{border-top:2px solid var(--aksent);padding-top:24px}
+.tjeneste h3{font-size:1.625rem;margin-bottom:12px}
+.tjeneste .punkter{margin:20px 0 12px}
+@media (min-width:960px){
+  .tjenester{grid-template-columns:1fr 1fr;gap:64px}
+}
+
+/* Tjenestelista på /meta-annonser: tre spalter med tynn linje over hvert punkt */
+.tjenesteliste{list-style:none;margin:0;padding:0;display:grid;gap:40px}
+.tjenesteliste li{border-top:1px solid var(--linje);padding-top:20px}
+.tjenesteliste h3{margin-bottom:8px}
+@media (min-width:720px){.tjenesteliste{grid-template-columns:1fr 1fr;column-gap:48px}}
+@media (min-width:1100px){.tjenesteliste{grid-template-columns:repeat(3,1fr)}}
+
+/* Hvorfor oss og «Dette kan du forvente»: tre spalter med tynn linje over */
+.grunner,.fordeler{list-style:none;margin:0;padding:0;display:grid;gap:40px}
+.grunn,.fordeler li{border-top:1px solid var(--linje);padding-top:20px}
+.grunn h3,.fordeler h3{margin-bottom:8px}
+@media (min-width:960px){.grunner,.fordeler{grid-template-columns:repeat(3,1fr);column-gap:48px}}
+.seksjon--fordeler h2{margin-bottom:40px}
+
+/* Prosess og FAQ: overskrift til venstre (4 kol.), innhold til høyre (8 kol.) på PC */
+@media (min-width:960px){
+  .seksjon--prosess .beholder,.seksjon--faq .beholder{
+    display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:start;
+  }
+  .seksjon--prosess .seksjon-hode,.seksjon--faq .seksjon-hode{grid-column:1 / span 4;margin-bottom:0}
+  .prosess,.faq{grid-column:6 / span 7}
+}
+
+.prosess{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--linje)}
+.steg{display:grid;grid-template-columns:3.5rem minmax(0,1fr);gap:20px;padding:28px 0;border-top:1px solid var(--linje)}
+.steg-nr{font-family:var(--overskrift);font-weight:600;font-size:2.5rem;line-height:1;color:var(--aksent)}
+.steg h3{margin-bottom:6px}
+
+.seksjon--faq{background:var(--flate)}
+.seksjon--faq + .seksjon{border-top:0}
+.faq{border-bottom:1px solid var(--linje)}
+.faq-punkt{border-top:1px solid var(--linje)}
+.faq-punkt summary{
+  position:relative;display:block;list-style:none;cursor:pointer;min-height:44px;
+  padding:20px 44px 20px 0;font-family:var(--overskrift);font-weight:600;font-size:1.25rem;line-height:1.35;
+}
+.faq-punkt summary::-webkit-details-marker{display:none}
+.faq-punkt summary::after{
+  content:"+";content:"+" / "";position:absolute;right:4px;top:18px;font-family:var(--brodtekst);
+  font-size:1.5rem;font-weight:400;line-height:1.2;color:var(--aksent);
+}
+.faq-punkt[open] summary::after{content:"\2212";content:"\2212" / ""}
+.faq-punkt summary:hover{color:var(--aksent)}
+.faq-svar{padding:0 0 24px}
+
+/* Avslutning: hvit, mellom to linjer. Aldri et farget panel. */
+.cta{max-width:760px}
+.cta .innledning{font-size:1.125rem}
+
+/* Rolig kontaktlinje midt på lange sider: én setning med en tekstlenke, aldri en fylt knapp */
+.seksjon--kontaktlinje{padding:28px 0}
+.kontaktlinje{font-size:1.1875rem;color:var(--tekst-dempet)}
+.kontaktlinje a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+
+/* Utvalgt prosjekt */
+.prosjekt{display:grid;gap:48px}
+.prosjekt .seksjon-hode{margin-bottom:24px}
+.prosjekt-kunde{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.kundelogo{height:40px;width:auto}
+.prosjekt-detaljer{list-style:none;margin:20px 0 8px;padding:0;display:flex;flex-wrap:wrap;color:var(--tekst-dempet);font-size:1rem}
+.prosjekt-detaljer li + li::before{content:"\00b7";content:"\00b7" / "";margin:0 .6rem}
+.prosjekt-visning img{border:1px solid var(--linje);width:100%}
+.prosjekt--mobil .prosjekt-visning img{max-width:280px}
+@media (min-width:960px){
+  .prosjekt{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center}
+  .prosjekt-tekst{grid-column:1 / span 5}
+  .prosjekt-visning{grid-column:7 / span 6}
+  .prosjekt--mobil .prosjekt-visning{grid-column:8 / span 4;justify-self:center}
+}
+
+/* «Du snakker direkte med oss» */
+.personstripe{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:32px}
+.personstripe li{border-top:1px solid var(--linje);padding-top:20px}
+.person-navn{font-size:1.375rem}
+.person-rolle{color:var(--tekst-dempet);margin-top:4px}
+.person-tlf{display:inline-flex;align-items:center;min-height:44px;font-size:1.25rem;font-weight:600;margin-top:4px}
+@media (min-width:720px){.personstripe{grid-template-columns:1fr 1fr;column-gap:48px}}
+
+/* Personer på Om oss */
+.personer{display:grid;gap:48px}
+.person{border-top:2px solid var(--aksent);padding-top:24px}
+.portrett{width:100%;max-width:360px;aspect-ratio:4 / 5;object-fit:cover;margin-bottom:20px}
+.person-omtale{margin-top:12px}
+.person-kontakt{list-style:none;margin:12px 0 0;padding:0}
+.person-kontakt a{display:inline-flex;align-items:center;min-height:44px}
+@media (min-width:720px){.personer{grid-template-columns:1fr 1fr;column-gap:64px}}
+
+/* Kalkulator- og nettsideteaser */
+.teaser{max-width:760px}
+.teaser .seksjon-hode{margin-bottom:16px}
+.teaser p{margin-bottom:8px}
+/* Kalkulatorteaseren på /meta-annonser med illustrasjonsfoto: tekst til venstre (kol. 1–6), foto til høyre
+   (kol. 8–12) på PC. D6: illustrasjonsfoto står ved tekst om leserens egen hverdag («Lønner det seg for deg?»),
+   aldri ved «vi», navn eller prosjekter. */
+.teaser--med-bilde{max-width:none;display:grid;gap:40px}
+.teaser-bilde img{width:100%;border:1px solid var(--linje)}
+@media (min-width:960px){
+  .teaser--med-bilde{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center}
+  .teaser--med-bilde .teaser-tekst{grid-column:1 / span 6}
+  .teaser--med-bilde .teaser-bilde{grid-column:8 / span 5}
+}
+
+/* Bransjer på /meta-annonser */
+.seksjon--passer .seksjon-hode{margin-bottom:32px}
+/* Spaltebredden styrer antallet: hver spalte har plass til det lengste yrket («Anleggsgartnere»), så ingen ord
+   deles midt i. Én spalte på telefon, to fra ca. 430 px og tre fra ca. 640 px. */
+.bransjeliste{columns:11rem 3;column-gap:32px;max-width:900px}
+.bransjeliste li{break-inside:avoid;margin:0 0 .4rem} /* bare margin under, så spaltene starter på samme høyde */
+.avslutning{margin-top:24px}
+
+/* «Dette får du» på /nettsider */
+.sjekkliste{max-width:900px}
+@media (min-width:960px){.seksjon--sjekkliste .sjekkliste{columns:2;column-gap:48px}.sjekkliste li{break-inside:avoid}}
+.tillegg{margin-top:24px;color:var(--tekst-dempet)}
+
+/* Løpende tekst (caset, personvern, kalkulator) */
+.tekstblokk{max-width:760px}
+.tekstblokk h2{margin-bottom:20px}
+.tekstblokk .sjekkliste{margin-top:16px}
+.tekstboks{border:1px solid var(--linje);padding:32px}
+.tekst-bilde{margin-top:32px}
+.tekst-bilde img{width:100%}
+.seksjon--tekst + .seksjon--tekst,.seksjon--tekst + .seksjon--liste,.seksjon--liste + .seksjon--tekst{border-top:0;padding-top:0}
+
+/* Faktaboks på caset */
+.faktaboks{border-top:2px solid var(--aksent);border-bottom:1px solid var(--linje);padding:24px 0;max-width:760px}
+.faktaboks .kundelogo{margin-bottom:20px}
+.faktaboks-tittel{font-size:1.375rem;margin-bottom:12px}
+.faktaboks dl{margin:0}
+.faktaboks dl div{display:grid;gap:2px;padding:10px 0;border-top:1px solid var(--linje)}
+.faktaboks dt{color:var(--tekst-dempet);font-size:1rem}
+.faktaboks dd{margin:0}
+@media (min-width:720px){.faktaboks dl div{grid-template-columns:10rem minmax(0,1fr);gap:16px}}
+
+/* Skjermbilder på caset: rene bilder med 1 px kant */
+.seksjon--skjermbilder h2{margin-bottom:32px}
+.skjermbilder{display:grid;gap:40px;align-items:start}
+.skjermbilde img{border:1px solid var(--linje);width:100%}
+.skjermbilde--mobil{max-width:280px}
+@media (min-width:960px){.skjermbilder{grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:48px}}
+
+/* Firmaopplysninger, adresse og 404-lenker */
+.firmaboks,.adresseboks{max-width:760px}
+.firmaboks h2,.adresseboks h2{margin-bottom:16px}
+.adresseboks address{font-size:1.25rem;margin-bottom:12px}
+.lenkeliste{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--linje);max-width:760px}
+.lenkeliste li{border-top:1px solid var(--linje)}
+.lenkeliste .pil-lenke{min-height:56px}
+.seksjon--lenkeliste{padding:40px 0 var(--luft)}
+
+/* ---------------------------------------------------------------- Kontakt: ring først, så skjemaet */
+.kontaktvalg{display:grid;gap:56px}
+.ring-direkte h2{margin-bottom:16px}
+.ringliste{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--linje)}
+.ringliste li{border-top:1px solid var(--linje);padding:20px 0}
+.ring-navn{font-size:1.25rem}
+.ring-tlf{display:inline-flex;align-items:center;min-height:48px;font-family:var(--overskrift);font-weight:600;font-size:1.875rem;white-space:nowrap}
+.ring-epost{display:flex;align-items:center;min-height:44px}
+@media (min-width:960px){
+  .kontaktvalg{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:start}
+  .ring-direkte{grid-column:1 / span 4}
+  .skjemadel{grid-column:6 / span 7}
+}
+
+/* ---------------------------------------------------------------- Skjema */
+.skjemaramme h2{margin-bottom:8px}
+.skjema{margin-top:24px}
+.skjema-merknad{font-size:1rem;color:var(--tekst-dempet);margin-bottom:20px}
+.skjemafelt-rutenett{display:grid;gap:20px}
+.skjemafelt,.skjemagruppe{grid-column:1 / -1;min-width:0}
+@media (min-width:640px){
+  .skjemafelt-rutenett{grid-template-columns:1fr 1fr;column-gap:20px}
+  .skjemafelt--halv{grid-column:auto}
+}
+.skjemafelt label{display:block;font-weight:600;font-size:1rem;margin-bottom:6px}
+.pakrevd{font-weight:400;color:var(--tekst-dempet)}
+/* Hjelpetekst under etiketten, i stedet for plassholder (som forsvinner når man skriver og kan se utfylt ut). */
+.felthjelp{font-size:1rem;line-height:1.5;color:var(--tekst-dempet);margin:-2px 0 8px}
+.skjemafelt input,.skjemafelt select,.skjemafelt textarea{
+  display:block;width:100%;min-height:48px;padding:.625rem .75rem;
+  border:1px solid var(--feltkant);border-radius:2px;background:#FFFFFF;color:var(--tekst);
+  font:inherit;font-size:1rem;line-height:1.5;
+}
+.skjemafelt textarea{min-height:8rem;resize:vertical}
+.skjemafelt input::placeholder,.skjemafelt textarea::placeholder{color:var(--tekst-dempet);opacity:1}
+.skjemagruppe{border:1px solid var(--linje);margin:0;padding:16px 20px 20px}
+/* Legenden flyter inni rammen (float), så en legende over to linjer ikke krysser rammen på smale skjermer. */
+.skjemagruppe legend{float:left;width:100%;font-weight:600;font-size:1rem;padding:0;margin:0 0 12px}
+.skjemagruppe legend + *{clear:both}
+.skjemagruppe .skjemafelt-rutenett{margin-top:8px}
+.har-feil input,.har-feil select,.har-feil textarea{border:2px solid var(--feil)}
+.skjemagruppe.har-feil{border:2px solid var(--feil)}
+.feltfeil{color:var(--feil);font-weight:600;font-size:1rem;margin-top:6px}
+.feilsammendrag{border:2px solid var(--feil);padding:16px 20px;margin-bottom:24px}
+.feilsammendrag h3{font-family:var(--brodtekst);font-size:1.0625rem;color:var(--feil);margin-bottom:8px}
+.feilsammendrag ul{margin:0;padding-left:1.25rem}
+.feilsammendrag a{color:var(--tekst)}
+.honning{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.knapp-send{margin-top:28px;min-width:10rem}
+.skjema-personvern{font-size:1rem;color:var(--tekst-dempet);margin-top:20px}
+.skjema-utenjs{border:2px solid var(--aksent);padding:16px 20px;margin-top:16px}
+.skjema-kvittering{border-top:2px solid var(--aksent);border-bottom:1px solid var(--linje);padding:24px 0;margin-top:24px}
+.skjema-kvittering p{font-size:1.25rem;line-height:1.5}
+.skjema-feilmelding{border:2px solid var(--feil);padding:16px 20px;margin-top:24px}
+
+/* ---------------------------------------------------------------- Footer */
+.sidebunn{background:var(--flate);border-top:1px solid var(--linje);padding:64px 0 0;font-size:1rem}
+.sidebunn-rutenett{display:grid;gap:40px}
+.sidebunn .logo img{height:40px}
+.sidebunn-om p{margin-top:12px;color:var(--tekst-dempet)}
+.sidebunn-tittel{font-size:1.125rem;margin-bottom:8px}
+.sidebunn ul{list-style:none;margin:0;padding:0}
+.sidebunn-nav a,.sidebunn-kontakt a{display:flex;align-items:center;min-height:44px;color:var(--tekst)}
+.sidebunn-nav a[aria-current="page"]{color:var(--aksent);text-decoration-thickness:2px}
+.sidebunn-kontakt li + li{margin-top:12px}
+.sidebunn-navn{display:block;font-weight:600;margin-top:8px}
+.sidebunn-adresse address{color:var(--tekst)}
+.sidebunn-nav:focus{outline:none}
+.sosiale{margin-top:20px}
+.sosiale-tittel{font-weight:600}
+.sosiale-liste{display:flex;gap:8px}
+.sosiale-liste a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;color:var(--aksent)}
+.sidebunn-juss{margin-top:48px;padding-top:20px;padding-bottom:28px;border-top:1px solid var(--linje);color:var(--tekst-dempet);font-size:.95rem}
+.sidebunn-juss p{max-width:none}
+@media (min-width:640px){.sidebunn-rutenett{grid-template-columns:1fr 1fr}}
+@media (min-width:1100px){.sidebunn-rutenett{grid-template-columns:1.4fr 1fr 1.2fr 1fr;gap:48px}}
+
+/* ---------------------------------------------------------------- Annonsekalkulatoren (farger og typografi) */
+.kalk-app{--alt:var(--flate);--knapp-bg:var(--aksent);--knapp-hover:var(--aksent-hover);--marg-kalk:var(--marg);font-size:1.0625rem}
+.kalk-app h1,.kalk-app h2,.kalk-app h3{font-family:var(--overskrift);font-weight:600;letter-spacing:0}
+.kalk-app h1{font-size:clamp(2.25rem,1.6rem + 2.6vw,3.5rem);line-height:1.12}
+.kalk-app .eyebrow{font-size:.95rem}
+.seksjon--tekst .tekstboks{background:var(--bakgrunn)}
+
+/* ---------------------------------------------------------------- Utskrift */
+@media print{
+  .sidetopp-knapper,.hovedmeny,.hopp-lenke,.sidebunn-nav{display:none!important}
+  .seksjon{padding:24px 0}
+}

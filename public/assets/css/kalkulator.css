@@ -1,0 +1,243 @@
+/* Annonsekalkulatoren (fra teamet/annonsekalkulator.html). Alt er avgrenset under .kalk-app, slik at
+   kalkulatoren ikke påvirker resten av siden og designets stiler ikke ødelegger kalkulatoren.
+   Fargene er variabler: hvert design setter sine egne verdier på .kalk-app i stil.css. */
+
+/* Standardverdier med null spesifisitet (:where). De peker til designets egne variabler (--aksent, --tekst osv.
+   i stil.css), så kalkulatoren får samme farger og typografi som resten av siden. Ingen egne merkefarger,
+   ingen skygger og ingen avrundede bokser (plan 5.6.3). */
+:where(.kalk-app){
+  --bg:#ffffff;
+  --alt:var(--flate);
+  --panel:#ffffff;
+  --ink:var(--tekst);
+  --muted:var(--tekst-dempet);
+  --line:var(--linje);
+  /* Må holde 3:1 mot både panel og --alt: den er eneste visuelle grense rundt inputfelt (WCAG 1.4.11). */
+  --line-sterk:var(--feltkant);
+  --blue-dk:var(--aksent);
+  --focus:var(--aksent);
+  --pos:#14532d;
+  --neg:var(--feil);
+  --varsel-bg:#fdf3e2; --varsel-ink:#4a2b00; --varsel-kant:#a06a17;
+  --knapp-bg:var(--aksent); --knapp-ink:#ffffff; --knapp-hover:var(--aksent-hover);
+}
+.kalk-app{
+  color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  line-height:1.65;font-size:17px;overflow-wrap:break-word;
+}
+.kalk-app *,.kalk-app *::before,.kalk-app *::after{box-sizing:border-box}
+.kalk-app h1,.kalk-app h2,.kalk-app h3{line-height:1.22;letter-spacing:-.01em;margin:0}
+.kalk-app h1{font-size:clamp(1.85rem,4.6vw,3rem)}
+.kalk-app h2{font-size:clamp(1.5rem,3.4vw,2.15rem)}
+.kalk-app h3{font-size:clamp(1.1rem,2.2vw,1.32rem)}
+.kalk-app p,.kalk-app dl,.kalk-app dd,.kalk-app ul,.kalk-app ol,.kalk-app fieldset,.kalk-app form{margin:0}
+.kalk-app a{color:var(--blue-dk);text-decoration:underline;text-underline-offset:3px}
+.kalk-app a:hover{text-decoration-thickness:2px}
+.kalk-app ul,.kalk-app ol{padding-left:1.3rem}
+.kalk-app li{margin:.3rem 0}
+.kalk-app [hidden]{display:none!important}
+.kalk-app :focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:3px}
+
+.kalk-app .wrap{max-width:calc(1200px + 2 * var(--marg-kalk,24px));margin:0 auto;padding:0 var(--marg-kalk,24px)}
+#kalkulator:focus,#resultatPanel:focus{outline:none}
+
+/* ---------- Topp ---------- */
+.kalk-app .hero{background:var(--alt);border-bottom:1px solid var(--line)}
+.kalk-app .hero .wrap{padding-top:32px;padding-bottom:24px}
+.kalk-app .eyebrow{font-size:.95rem;font-weight:400;color:var(--muted);margin:0}
+.kalk-app .hero h1{margin:.5rem 0 .8rem;max-width:20ch}
+.kalk-app .hero .ingress{font-size:1.06rem;line-height:1.55;color:var(--muted);max-width:62ch}
+.kalk-app .hero .ingress + .ingress{margin-top:.6rem}
+
+/* «Hva betyr ordene?» og «Slik er tallene avrundet»: native <details>, ingen skript. */
+.kalk-app .ordliste,.kalk-app .avrunding{margin-top:.8rem;max-width:68ch}
+.kalk-app .ordliste summary,.kalk-app .avrunding summary{
+  min-height:44px;padding:.5rem 0;cursor:pointer;font-weight:700;color:var(--blue-dk);width:fit-content;max-width:100%;
+}
+.kalk-app .ordliste summary:hover,.kalk-app .avrunding summary:hover{text-decoration:underline;text-underline-offset:3px}
+.kalk-app .ordliste dl{display:grid;gap:.25rem;margin:.2rem 0 .4rem;font-size:.95rem}
+.kalk-app .ordliste dt{font-weight:700}
+.kalk-app .ordliste dd{color:var(--muted);margin:0 0 .3rem}
+.kalk-app .avrunding ul{color:var(--muted);font-size:.94rem;margin:.2rem 0 .4rem}
+
+/* ---------- Seksjoner ---------- */
+.kalk-app section.blk{border-bottom:1px solid var(--line)}
+.kalk-app .kalkseksjon{padding:28px 0 56px}
+.kalk-app .formelseksjon{padding:44px 0;background:var(--alt)}
+.kalk-app .formelseksjon h2{font-size:clamp(1.3rem,3vw,1.7rem)}
+.kalk-app .formelingress{color:var(--muted);margin:.6rem 0 1rem;max-width:72ch}
+
+/* ---------- Kalkulator ---------- */
+.kalk-app .kalk{display:grid;gap:24px;align-items:start}
+/* Grid-elementer har min-width:auto og kan ellers ikke krympe under inputfeltenes egen bredde. */
+.kalk-app .kalk>*{min-width:0}
+@media(min-width:940px){.kalk-app .kalk{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.kalk-app fieldset{border:1px solid var(--line);border-radius:0;padding:18px;margin-bottom:16px;background:var(--panel);min-width:0}
+.kalk-app legend{font-weight:700;font-size:1rem;color:var(--ink);padding:0 .45rem}
+.kalk-app .felt{margin-bottom:18px}
+.kalk-app .felt:last-child{margin-bottom:0}
+.kalk-app .felt label{display:block;font-weight:700;font-size:.96rem;margin-bottom:.2rem}
+.kalk-app .valgfritt{font-weight:400}
+.kalk-app .felt .hjelp{display:block;color:var(--muted);font-size:.86rem;margin-bottom:.45rem}
+.kalk-app .inn{display:flex;align-items:stretch;border:2px solid var(--line-sterk);border-radius:2px;background:var(--bg);overflow:hidden;max-width:22rem}
+.kalk-app .inn input{
+  flex:1;width:100%;min-width:0;border:0;background:transparent;color:var(--ink);
+  font:inherit;font-variant-numeric:tabular-nums;padding:.7rem .8rem;min-height:44px;
+}
+.kalk-app .inn input:focus-visible{outline:3px solid var(--focus);outline-offset:-3px;border-radius:0}
+.kalk-app .inn:focus-within{border-color:var(--focus)}
+.kalk-app .inn .enhet{
+  display:grid;place-items:center;padding:0 .85rem;background:var(--alt);
+  border-left:2px solid var(--line-sterk);font-weight:700;font-size:.92rem;color:var(--ink);min-width:3rem;
+}
+.kalk-app .felt.ugyldig .inn{border-color:var(--neg)}
+.kalk-app .feilmelding{display:block;margin-top:.4rem;color:var(--neg);font-size:.88rem;font-weight:600}
+.kalk-app .feilmelding::before{content:"Feil: ";font-weight:800}
+
+.kalk-app .knapper{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+/* «Vis med eksempeltall» øverst i skjemaet: én setning og knappen, før de fem feltene. */
+.kalk-app .eksempelstart{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:16px}
+.kalk-app .eksempelstart p{margin:0;color:var(--muted);font-size:.94rem;max-width:44ch}
+.kalk-app .knapper-luft{margin-top:18px}
+.kalk-app .btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  min-height:44px;padding:.6rem 1.15rem;border-radius:2px;border:2px solid transparent;
+  font:inherit;font-weight:700;font-size:.94rem;cursor:pointer;text-decoration:none;
+}
+.kalk-app button.btn-primar{background:var(--knapp-bg);color:var(--knapp-ink);border-color:var(--knapp-bg)}
+.kalk-app button.btn-primar:hover{background:var(--knapp-hover);border-color:var(--knapp-hover)}
+.kalk-app .btn-sekundar{background:var(--panel);color:var(--ink);border-color:var(--line-sterk)}
+.kalk-app .btn-sekundar:hover{border-color:var(--focus)}
+
+.kalk-app .varsel{
+  border:3px solid var(--varsel-kant);background:var(--varsel-bg);color:var(--varsel-ink);
+  border-radius:0;padding:16px 18px;margin:16px 0;font-size:.94rem;
+}
+.kalk-app .varsel h2{font-size:.95rem;margin-bottom:.35rem;display:flex;align-items:center;gap:.45rem}
+.kalk-app .varsel p + p{margin-top:.5rem}
+.kalk-app .varsel a{color:inherit}
+.kalk-app .varsel svg{width:18px;height:18px;flex:none}
+
+.kalk-app .resultat{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:22px}
+.kalk-app .resultat h2{font-size:1.15rem;margin-bottom:.2rem}
+.kalk-app .resultat h3{font-size:1.02rem;margin:1.3rem 0 .1rem}
+.kalk-app .tom-tilstand{color:var(--muted);font-size:.98rem;margin-top:.6rem}
+.kalk-app .mangler{margin-top:.7rem}
+.kalk-app .mangler ul{margin-top:.3rem;color:var(--muted);font-size:.94rem}
+.kalk-app .feilsamling{border-left:5px solid var(--neg);padding-left:.9rem}
+.kalk-app .feilsamling ul{color:var(--neg);font-weight:600}
+.kalk-app .kopistatus{margin-top:.6rem;font-size:.9rem;font-weight:700;color:var(--pos)}
+.kalk-app .kopistatus.advarsel{color:var(--varsel-ink);background:var(--varsel-bg);border:2px solid var(--varsel-kant);border-radius:0;padding:.6rem .8rem}
+.kalk-app .tolkning{
+  font-size:1.02rem;font-weight:600;margin:.9rem 0 1.1rem;padding:14px 16px;
+  border-radius:0;background:var(--alt);border:1px solid var(--line);border-left:5px solid var(--line-sterk);
+}
+.kalk-app .tolkning.pos{border-left-color:var(--pos)}
+.kalk-app .tolkning.neg{border-left-color:var(--neg)}
+.kalk-app .tolkning .stempel{
+  display:inline-flex;align-items:center;gap:.35rem;font-size:.74rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.1em;padding:.2rem .55rem;border-radius:4px;
+  border:2px solid currentColor;margin-right:.5rem;vertical-align:.08em;
+}
+.kalk-app .tolkning.pos .stempel{color:var(--pos)}
+.kalk-app .tolkning.neg .stempel{color:var(--neg)}
+.kalk-app .tolkning.null .stempel{color:var(--muted)}
+
+.kalk-app dl.linjer{display:grid;gap:0;margin:0}
+.kalk-app dl.linjer .rad{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem 1rem;align-items:baseline;
+  padding:.7rem 0;border-bottom:1px solid var(--line);
+}
+.kalk-app dl.linjer .rad:last-child{border-bottom:0}
+.kalk-app dl.linjer dt{font-weight:600;font-size:.96rem;min-width:0}
+.kalk-app dl.linjer dt .formel{display:block;font-size:.79rem;color:var(--muted);font-weight:400;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin-top:.1rem}
+.kalk-app dl.linjer dt .linjehjelp{display:block;font-size:.82rem;color:var(--muted);font-weight:400;margin-top:.2rem}
+.kalk-app dl.linjer dd{margin:0;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:1.02rem}
+.kalk-app dl.linjer dd .naerforklaring{display:block;font-size:.78rem;font-weight:400;color:var(--muted);white-space:normal;text-align:right;max-width:18ch;margin-left:auto}
+.kalk-app dl.linjer .rad.hoved{background:var(--alt);border-radius:0;padding:.8rem .9rem;margin:.5rem 0;border-bottom:0}
+.kalk-app dl.linjer .rad.hoved dd{font-size:1.2rem}
+.kalk-app dl.nokkeltall{background:var(--alt);border:1px solid var(--line);border-radius:0;padding:0 .9rem}
+.kalk-app dl.nokkeltall dd{font-size:1.14rem}
+.kalk-app dd.pos{color:var(--pos)}
+.kalk-app dd.neg{color:var(--neg)}
+@media(max-width:520px){
+  .kalk-app dl.linjer .rad{grid-template-columns:1fr}
+  .kalk-app dl.linjer dd{text-align:left}
+  .kalk-app dl.linjer dd .naerforklaring{text-align:left;margin-left:0}
+}
+
+.kalk-app .grenseboks{
+  margin-top:.8rem;padding:14px 16px;border-radius:0;background:var(--alt);
+  border:1px solid var(--line);border-left:5px solid var(--blue-dk);font-size:.94rem;
+}
+.kalk-app .grenseboks p + p{margin-top:.45rem}
+.kalk-app .grenseboks .tall{font-weight:700;font-size:1.02rem}
+.kalk-app .grenseboks .formel{font-size:.79rem;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin-top:.1rem}
+.kalk-app .grenseboks .hjelp,.kalk-app .grenseboks .naerforklaring{color:var(--muted)}
+.kalk-app .grenseboks .naerforklaring{display:block;font-size:.82rem;font-weight:400}
+
+.kalk-app .formelliste{list-style:none;padding:0;margin:0;display:grid;gap:.1rem}
+.kalk-app .formelliste li{
+  counter-increment:f;margin:0;padding:.6rem .8rem .6rem 2.6rem;position:relative;
+  border-bottom:1px solid var(--line);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.9rem;background:var(--panel);
+}
+.kalk-app .formelliste{counter-reset:f}
+.kalk-app .formelliste li:last-child{border-bottom:0}
+.kalk-app .formelliste li::before{
+  content:counter(f);position:absolute;left:.7rem;top:.6rem;
+  color:var(--muted);font-size:.78rem;font-weight:700;
+}
+.kalk-app .formelbolk{border:1px solid var(--line);border-radius:0;overflow:hidden}
+
+.kalk-app .kopiboks{margin-top:14px}
+.kalk-app .kopiboks textarea{
+  width:100%;min-height:9rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.84rem;padding:12px;border:2px solid var(--line-sterk);border-radius:2px;
+  background:var(--bg);color:var(--ink);line-height:1.5;
+}
+
+.kalk-app .kontakt{margin-top:20px;background:var(--panel);border:2px solid var(--blue-dk);border-radius:0;padding:20px 22px}
+.kalk-app .kontakt h2{font-size:1.15rem;margin-bottom:.4rem}
+.kalk-app .kontakt p{color:var(--muted);font-size:.95rem}
+.kalk-app .kontaktliste{list-style:none;padding:0;margin:.5rem 0 0}
+.kalk-app .kontaktliste li{margin:0}
+.kalk-app .kontaktliste a{display:inline-flex;align-items:center;min-height:44px;font-weight:700;overflow-wrap:anywhere}
+
+.kalk-app .info{
+  background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--blue-dk);
+  border-radius:0;padding:18px 20px;margin-top:24px;
+}
+.kalk-app .info h2{font-size:1rem;margin-bottom:.4rem}
+.kalk-app .info p{color:var(--muted);font-size:.94rem}
+.kalk-app .info p + p{margin-top:.75rem}
+
+/* Statuslinja: én lenke til resultatet, synlig mens man skriver. Sticky rett under sidens faste meny
+   (--topp-h; headeren er ikke sticky i dag, så den er 0), ikke fast nederst: en fast bunnlinje havner bak skjermtastaturet på iOS. */
+.kalk-app .statuslinje{
+  position:sticky;top:var(--topp-h,0px);z-index:30;
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  min-height:44px;padding:.45rem .9rem;margin:0 0 16px;
+  background:var(--bg);color:var(--ink);border:2px solid var(--blue-dk);border-radius:2px;
+  font-weight:700;font-size:.95rem;line-height:1.35;text-decoration:none;
+}
+.kalk-app .statuslinje:hover{color:var(--blue-dk)}
+.kalk-app .statuslinje:focus-visible{outline-offset:-7px}
+.kalk-app .statuslinje svg{width:18px;height:18px;flex:none;color:var(--blue-dk)}
+/* Felt i fokus og ankerhopp skal ikke havne bak menyen + statuslinja. */
+html:has(.kalk-app){scroll-padding-top:calc(var(--topp-h,0px) + 74px)}
+@media(max-height:560px){
+  .kalk-app .statuslinje{position:static}
+  html:has(.kalk-app){scroll-padding-top:0}
+}
+
+@media(max-width:560px){
+  .kalk-app .hero .wrap{padding-top:16px;padding-bottom:8px}
+  .kalk-app .hero h1{font-size:1.6rem;margin:.2rem 0 .45rem}
+  .kalk-app .hero .ingress{font-size:.96rem;line-height:1.5}
+  .kalk-app .kalkseksjon{padding:12px 0 40px}
+  .kalk-app .statuslinje{margin-bottom:10px}
+  .kalk-app fieldset{padding:12px 14px 14px}
+  .kalk-app .resultat,.kalk-app .kontakt{padding:18px 16px}
+}
