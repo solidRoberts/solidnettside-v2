@@ -163,10 +163,11 @@ button.knapp{font:inherit;font-weight:600;font-size:1rem}
   .knapp-topp{width:auto;margin:0}
 }
 
+/* Menyen har seks punkter: ord skal aldri brekke, og mellomrommene er litt mindre på mellomstore skjermer. */@media (min-width:960px){.menylenke,.knapp-topp{white-space:nowrap}}@media (min-width:960px) and (max-width:1199px){.menyliste{gap:18px}.hovedmeny{gap:20px}}
 /* Telefonnummeret som tekst ytterst til høyre i headeren, bare der det får plass på én rad (under det har
    headeren «Ring»-knappen, eller menyen og «Book»). Ingen fylt knapp. */
 .topp-tlf{display:none}
-@media (min-width:1100px){
+@media (min-width:1280px){
   .hovedmeny{margin-left:auto}
   .topp-tlf{
     display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-left:12px;
