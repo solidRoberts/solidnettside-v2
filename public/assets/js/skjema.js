@@ -227,7 +227,9 @@
     // Svaradresse: «Svar» i varselet skal gå til kunden, men bare når kunden har oppgitt e-post.
     var epost = skjema.querySelector('input[type="email"]');
     if (epost && epost.value.trim() !== '') data._replyto = epost.value.trim();
-    data._cc = skjema.getAttribute('data-kopi');
+    // Kopi bare når det er satt en kopimottaker (tom data-kopi = ingen kopi).
+    var kopi = skjema.getAttribute('data-kopi');
+    if (kopi) data._cc = kopi;
     data._subject = skjema.getAttribute('data-emne');
     data._template = 'table';
     data._honey = '';
