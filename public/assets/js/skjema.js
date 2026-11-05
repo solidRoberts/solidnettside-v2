@@ -253,6 +253,8 @@
         clearTimeout(tidsgrense);
         if (r.ok && (r.json.success === 'true' || r.json.success === true)) {
           visSuksess(navn);
+          // Meta-hendelsen Lead, bare ved vellykket innsending og bare med samtykke (samtykke.js). Ingen skjemadata.
+          if (typeof window.smPiksel === 'function') window.smPiksel('Lead');
         } else {
           settSender(false);
           visFeilmelding();

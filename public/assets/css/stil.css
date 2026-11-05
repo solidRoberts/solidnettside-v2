@@ -468,6 +468,26 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
 @media (min-width:640px){.sidebunn-rutenett{grid-template-columns:1fr 1fr}}
 @media (min-width:1100px){.sidebunn-rutenett{grid-template-columns:1.4fr 1fr 1.2fr 1fr;gap:48px}}
 
+/* ---------------------------------------------------------------- Samtykkebanner (felles/js/samtykke.js)
+   Fast nederst, hvit med en strek i aksentfargen øverst. «Godta» og «Avvis» er like (omriss), ingen er fremhevet.
+   samtykke.js gir body like mye luft nederst som banneret er høyt, så footeren ikke skjules. */
+.samtykke{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--bakgrunn);border-top:2px solid var(--aksent);max-height:70vh;overflow:auto;font-size:1rem;line-height:1.55}
+.samtykke-inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 40px;padding-top:20px;padding-bottom:20px}
+.samtykke-tekst{flex:1 1 520px;min-width:0}
+.samtykke-tekst p{max-width:80ch}
+.samtykke-tekst p + p{margin-top:0;color:var(--tekst-dempet)}
+.samtykke-tittel{font-family:var(--overskrift);font-weight:600;font-size:1.125rem;margin-bottom:4px}
+.samtykke-knapper{display:flex;gap:12px;flex:0 0 auto}
+.samtykke-knapper .knapp{min-width:8.5rem}
+@media (max-width:599px){
+  .samtykke-inner{padding-top:16px;padding-bottom:16px}
+  .samtykke-knapper{flex:1 1 100%}
+  .samtykke-knapper .knapp{flex:1 1 0;min-width:0}
+}
+.samtykke-endre{display:inline-flex;align-items:center;min-height:44px;padding:0;border:0;background:none;font:inherit;color:var(--aksent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em;cursor:pointer}
+.samtykke-endre:hover{color:var(--aksent-hover);text-decoration-thickness:2px}
+@media print{.samtykke,.samtykke-endre{display:none!important}}
+
 /* ---------------------------------------------------------------- Annonsekalkulatoren (farger og typografi) */
 .kalk-app{--alt:var(--flate);--knapp-bg:var(--aksent);--knapp-hover:var(--aksent-hover);--marg-kalk:var(--marg);font-size:1.0625rem}
 .kalk-app h1,.kalk-app h2,.kalk-app h3{font-family:var(--overskrift);font-weight:600;letter-spacing:0}
