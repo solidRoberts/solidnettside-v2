@@ -1,12 +1,13 @@
 /*
-  Kontaktskjemaet på /kontakt. Sender med FormSubmit AJAX (https://formsubmit.co) til adressen i
-  data-endepunkt, med kopi til data-kopi. Alle tekster står i HTML-en (fra kilde/innhold.mjs).
+  Kontaktskjemaet på /kontakt. Sender JSON til data-endepunkt (/api/kontakt, Vercel-funksjonen i api/kontakt.js,
+  som sender e-post via Resend). Alle tekster står i HTML-en (fra kilde/innhold.mjs).
   - Påkrevd: navn, og minst ett av feltene i en <fieldset data-minst-en> (telefon eller e-post).
   - Validering uten nettleserens egne bobler: feilen vises ved feltet eller gruppa (aria-invalid +
     aria-describedby), og et sammendrag øverst får fokus og lenker til feltene.
   - Honningfelt (_honey): er det fylt ut, sendes ingenting.
-  - Tomme valgfrie felt sendes som tom tekst. _replyto settes bare når e-post er fylt ut.
-  - Vellykket bare når svaret er OK og FormSubmit svarer success: "true". Da vises kvitteringen med navnet.
+  - Tomme valgfrie felt sendes som tom tekst. «tid» er millisekunder siden siden ble åpnet (spamfilteret i
+    api/kontakt.js forkaster innsendinger som kommer for raskt eller uten tid).
+  - Vellykket bare når svaret er OK og funksjonen svarer ok: true. Da vises kvitteringen med navnet.
     Ellers vises en feilmelding med telefon og e-post, og det brukeren skrev, blir stående.
   - ?gjelder=annonser|google|nettside i adressen forhåndsvelger «Hva gjelder det?».
 */
@@ -15,6 +16,7 @@
 
   var skjema = document.getElementById('kontaktskjema');
   if (!skjema || !window.fetch || !window.JSON) return;
+  var apnet = Date.now();
 
   var plass = document.getElementById('skjema-plass');
   var knapp = skjema.querySelector('.knapp-send');
@@ -224,15 +226,10 @@
     var data = {};
     felt.forEach(function (el) { data[el.name] = el.value.trim(); });
     data.Side = window.location.href;
-    // Svaradresse: «Svar» i varselet skal gå til kunden, men bare når kunden har oppgitt e-post.
-    var epost = skjema.querySelector('input[type="email"]');
-    if (epost && epost.value.trim() !== '') data._replyto = epost.value.trim();
-    // Kopi bare når det er satt en kopimottaker (tom data-kopi = ingen kopi).
-    var kopi = skjema.getAttribute('data-kopi');
-    if (kopi) data._cc = kopi;
+    // Svaradressen («Svar» i e-posten går til kunden) settes i api/kontakt.js ut fra feltet E-post.
     data._subject = skjema.getAttribute('data-emne');
-    data._template = 'table';
     data._honey = '';
+    data.tid = Date.now() - apnet;
 
     settSender(true);
     var kontroll = typeof AbortController === 'function' ? new AbortController() : null;
@@ -251,7 +248,7 @@
       })
       .then(function (r) {
         clearTimeout(tidsgrense);
-        if (r.ok && (r.json.success === 'true' || r.json.success === true)) {
+        if (r.ok && r.json.ok === true) {
           visSuksess(navn);
           // Meta-hendelsen Lead, bare ved vellykket innsending og bare med samtykke (samtykke.js). Ingen skjemadata.
           if (typeof window.smPiksel === 'function') window.smPiksel('Lead');
