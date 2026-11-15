@@ -1,7 +1,7 @@
 /*
   Kontaktskjemaet på /kontakt. Sender JSON til data-endepunkt (/api/kontakt, Vercel-funksjonen i api/kontakt.js,
   som sender e-post via Resend). Alle tekster står i HTML-en (fra kilde/innhold.mjs).
-  - Påkrevd: navn, og minst ett av feltene i en <fieldset data-minst-en> (telefon eller e-post).
+  - Påkrevd: felt med aria-required (navn og telefon fra 15.11.2026). <fieldset data-minst-en> støttes fortsatt.
   - Validering uten nettleserens egne bobler: feilen vises ved feltet eller gruppa (aria-invalid +
     aria-describedby), og et sammendrag øverst får fokus og lenker til feltene.
   - Honningfelt (_honey): er det fylt ut, sendes ingenting.
@@ -9,7 +9,7 @@
     api/kontakt.js forkaster innsendinger som kommer for raskt eller uten tid).
   - Vellykket bare når svaret er OK og funksjonen svarer ok: true. Da vises kvitteringen med navnet.
     Ellers vises en feilmelding med telefon og e-post, og det brukeren skrev, blir stående.
-  - ?gjelder=annonser|google|nettside i adressen forhåndsvelger «Hva gjelder det?».
+  - ?gjelder=… forhåndsvalgte «Hva gjelder det?» til 15.11.2026. Feltet er fjernet, men står i «Sendt fra»-lenken.
 */
 (function () {
   'use strict';
