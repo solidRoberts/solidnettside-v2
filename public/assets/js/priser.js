@@ -8,6 +8,17 @@
   if (liste) {
     const faner = [...liste.querySelectorAll('[role="tab"]')];
     const fra = (hash) => faner.find((f) => `#${f.getAttribute('aria-controls')}` === hash);
+    // Streken under valgt fane glir mellom fanene (bare transform, se «Bevegelse» i stil.css).
+    const strek = Object.assign(document.createElement('span'), { className: 'fane-strek' });
+    strek.setAttribute('aria-hidden', 'true');
+    liste.append(strek);
+    liste.classList.add('har-strek');
+    const flytt = () => {
+      const f = faner.find((x) => x.getAttribute('aria-selected') === 'true');
+      if (f) strek.style.transform = `translate(${f.offsetLeft}px, ${f.offsetTop + f.offsetHeight - liste.offsetHeight}px) scaleX(${f.offsetWidth / 100})`;
+    };
+    addEventListener('resize', flytt);
+    document.fonts?.ready.then(flytt); // fanebredden endrer seg når skriften er lastet
     const velg = (fane, fokus) => {
       for (const f of faner) {
         const pa = f === fane;
@@ -15,6 +26,7 @@
         f.tabIndex = pa ? 0 : -1;
         document.getElementById(f.getAttribute('aria-controls')).hidden = !pa;
       }
+      flytt();
       if (fokus) fane.focus();
     };
     liste.hidden = false;

@@ -617,3 +617,74 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
 .bevis-logo{display:block;height:56px;width:auto;max-width:200px}
 .bevis-kunde{display:block;padding:4px 0}
 .bevis-logo--rund{height:80px}
+
+/* ---------------------------------------------------------------- Bevegelse (23.11.2026, Roberts' ønske)
+   Rolig og kort: myke sideoverganger og små reaksjoner når man peker og trykker. Ingen scroll-animasjoner,
+   ingen partikler eller glød. Alt slås av for dem som har valgt redusert bevegelse (nederst). */
+
+/* Sideoverganger mellom sidene (Chrome, Edge og Safari; andre nettlesere bytter side som før).
+   Toppen står stille, den gamle siden toner ut, og den nye trekkes fram ovenfra og ned. */
+@view-transition{navigation:auto}
+.sidetopp{position:relative;view-transition-name:sidetopp}
+::view-transition-old(root){animation:side-ut .2s ease-in both}
+::view-transition-new(root){animation:side-inn .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes side-ut{to{opacity:0}}
+@keyframes side-inn{from{opacity:.4;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+
+/* Kjennetegnet vårt: en tynn marine strek som feier over under toppen hver gang en side åpnes. */
+.sidetopp::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:0;border-top:2px solid var(--aksent);
+  transform-origin:left;transform:scaleX(0);opacity:0;animation:sveip .6s cubic-bezier(.2,.8,.2,1) .1s both;
+}
+@keyframes sveip{0%{transform:scaleX(0);opacity:1}75%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
+
+/* Knapper: myk fargeovergang og et lite trykk ned når man klikker. */
+.knapp{transition:background-color .2s,border-color .2s,color .2s,transform .12s}
+.knapp:active{transform:translateY(1px)}
+
+/* Pil-lenker: pila skyver seg litt fram når man peker på lenken. */
+.pil-lenke::after{display:inline-block;transition:transform .2s ease}
+.pil-lenke:hover::after{transform:translateX(4px)}
+
+/* Menyen på PC: streken under lenken vokser fra venstre i stedet for å dukke opp. */
+@media (min-width:960px){
+  .menylenke{position:relative;transition:color .2s}
+  .menylenke:hover,.menylenke[aria-current="page"],.menylenke.er-aktiv-seksjon{text-decoration:none}
+  .menylenke::after{content:"";position:absolute;left:0;right:0;bottom:12px;height:2px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+  .menylenke:hover::after,.menylenke[aria-current="page"]::after,.menylenke.er-aktiv-seksjon::after{transform:scaleX(1)}
+}
+
+/* Spørsmål og eksempler glir åpen og igjen (nyere Chrome og Edge; andre åpner som før). */
+@supports (interpolate-size:allow-keywords){
+  :root{interpolate-size:allow-keywords}
+  details::details-content{block-size:0;overflow-y:clip;transition:block-size .3s cubic-bezier(.2,.8,.2,1),content-visibility .3s allow-discrete}
+  details[open]::details-content{block-size:auto}
+}
+.faq-punkt summary::after{transition:transform .25s ease}
+.faq-punkt[open] summary::after{transform:rotate(180deg)}
+
+/* Pakkene løfter seg litt når man peker på dem (bare med mus). */
+@media (hover:hover){
+  .pakke{transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .2s}
+  .pakke:hover{transform:translateY(-4px)}
+}
+
+/* Fanene på /priser: streken glir over til fanen man velger, og innholdet toner inn. */
+.faner{position:relative}
+.faner.har-strek button[aria-selected="true"]{border-bottom-color:transparent}
+.fane-strek{position:absolute;left:0;bottom:-1px;width:100px;height:0;border-top:3px solid var(--aksent);transform-origin:left;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.fanepanel:not([hidden]){animation:tone-inn .3s ease both}
+@keyframes tone-inn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Kundelogoene i farger når man peker på dem, ellers rolig grå. Søylene i grafen bytter farge mykt. */
+.bevis-logo{filter:grayscale(1);opacity:.75;transition:filter .3s,opacity .3s}
+.bevis-kunde:hover .bevis-logo,.bevis-kunde:focus-visible .bevis-logo{filter:none;opacity:1}
+.graf .stolpe{transition:fill .2s}
+
+/* Redusert bevegelse: ingen overganger eller animasjoner. */
+@media (prefers-reduced-motion:reduce){
+  @view-transition{navigation:none}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+  .sidetopp::after{display:none}
+}
