@@ -58,7 +58,7 @@ h1,h2,h3,summary,legend{overflow-wrap:anywhere}
 h1{font-size:clamp(2.25rem,1.6rem + 2.6vw,3.5rem);line-height:1.12;letter-spacing:-.01em}
 h2{font-size:clamp(1.75rem,1.4rem + 1.4vw,2.5rem);line-height:1.2}
 h3{font-size:1.375rem;line-height:1.3}
-h1 em,h2 em,h3 em{font-style:italic}
+h1 em,h2 em,h3 em{font-style:normal}
 p,ul,ol,dl,figure,address,blockquote{margin:0}
 p{max-width:68ch}
 p + p{margin-top:1em}
@@ -242,6 +242,20 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
 @media (min-width:960px){
   .tjenester{grid-template-columns:1fr 1fr;gap:64px}
 }
+
+/* Pakkene på /priser: tre spalter med 2 px strek over, den anbefalte med marine ramme. Stablet på mobil i samme rekkefølge («Alt i Start, og:» må komme etter Start). */
+.pakker{list-style:none;margin:0;padding:0;display:grid;gap:40px}
+.pakker>*{min-width:0}
+.pakke{border-top:2px solid var(--aksent);padding-top:24px;display:flex;flex-direction:column}
+.pakke--anbefalt{border:2px solid var(--aksent);padding:24px}
+.pakke--anbefalt .etikett{margin-bottom:8px}
+.pakke-pris{margin:12px 0 8px}
+.pakke-belop{font-family:var(--overskrift);font-weight:600;font-size:2.25rem;line-height:1.1}
+.pakke-for{color:var(--tekst-dempet);margin:0}
+.pakke-alt{font-weight:600;margin:20px 0 0}
+.pakke .punkter{margin:12px 0 28px}
+.pakke .knapp{margin-top:auto;align-self:flex-start}
+@media (min-width:960px){.pakker{grid-template-columns:repeat(3,1fr);gap:40px}}
 
 /* Tjenestelista på /meta-annonser: tre spalter med tynn linje over hvert punkt */
 .tjenesteliste{list-style:none;margin:0;padding:0;display:grid;gap:40px}
@@ -505,3 +519,79 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
   .sprakvelger,.sidetopp-knapper,.hovedmeny,.hopp-lenke,.sidebunn-nav{display:none!important}
   .seksjon{padding:24px 0}
 }
+
+/* /priser: eksempler i pakkekortene (video eller skjermbilde) */
+.pakke-eksempler{margin:0 0 28px}
+.pakke-eksempler summary{cursor:pointer;color:var(--aksent);font-weight:600}
+.eksempler{display:grid;gap:24px;margin-top:16px}
+.eksempler>*{min-width:0}
+.eksempel{margin:0}
+.eksempel video,.eksempel img{width:100%;max-width:240px;height:auto;border:1px solid var(--linje);background:var(--flate)}
+.eksempel figcaption{font-size:1rem;color:var(--tekst-dempet);margin-top:8px}
+
+/* /priser: «Dette har du etter X måneder» */
+.vekstplan{max-width:760px;border:1px solid var(--linje);padding:24px}
+.vekstplan fieldset{border:0;margin:0 0 20px;padding:0;display:flex;flex-wrap:wrap;gap:8px 28px}
+.vekstplan legend{font-weight:600;padding:0;margin-bottom:8px}
+.vekstplan .valg{display:inline-flex;align-items:center;gap:8px}
+.vekstplan .valg label{cursor:pointer}
+.vekstplan input[type=radio]{width:20px;height:20px;accent-color:var(--aksent);margin:0}
+.vekstplan input[type=range],.resultat-glider input{display:block;width:100%;min-height:32px;accent-color:var(--aksent)}
+.vekstplan-tittel{font-weight:600;margin:20px 0 4px}
+
+/* /priser: ekte tall dag for dag. Én serie i aksentfargen, kommende dager i lys grå. */
+.resultat-dag{font-weight:600;margin:0 0 12px}
+.resultat-tall{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:0 0 40px}
+.resultat-tall>*{min-width:0}
+.resultat-tall div{border-top:1px solid var(--linje);padding-top:12px;display:flex;flex-direction:column-reverse;justify-content:flex-end}
+.resultat-tall dt{font-size:1rem;color:var(--tekst-dempet)}
+.resultat-tall dd{margin:0;font-family:var(--overskrift);font-weight:600;font-size:clamp(1.75rem,1.3rem + 1.6vw,2.75rem);line-height:1.15;font-variant-numeric:tabular-nums}
+@media (min-width:960px){.resultat-tall{grid-template-columns:repeat(4,1fr)}}
+.graf{max-width:760px}
+.graf-tittel{font-size:1rem;color:var(--tekst-dempet);margin:0 0 12px}
+.graf svg{display:block;width:100%;height:auto;border-bottom:1px solid var(--tekst-dempet)}
+.graf .stolpe{fill:var(--linje)}
+.graf .er-med .stolpe{fill:var(--aksent)}
+.graf .treff{fill:transparent;cursor:pointer}
+.graf .soyle:hover .stolpe{fill:var(--aksent-hover)}
+.graf-datoer{list-style:none;margin:6px 0 0;padding:0;display:flex;font-size:.875rem;color:var(--tekst-dempet);font-variant-numeric:tabular-nums}
+.graf-datoer li{flex:1;text-align:center;min-width:0}
+.resultat-glider{max-width:760px;margin-top:24px}
+.resultat-kilde{font-size:1rem;color:var(--tekst-dempet);margin:20px 0 0;max-width:760px}
+.resultat-tabell{margin-top:16px}
+.resultat-tabell summary{cursor:pointer;color:var(--aksent);font-weight:600}
+.tabell-rull{overflow-x:auto;margin-top:12px}
+.resultat-tabell table{border-collapse:collapse;font-size:1rem;font-variant-numeric:tabular-nums}
+.resultat-tabell th,.resultat-tabell td{padding:8px 16px 8px 0;text-align:right;border-bottom:1px solid var(--linje);white-space:nowrap}
+.resultat-tabell th:first-child,.resultat-tabell td:first-child{text-align:left}
+
+/* /priser: faner (Alt i ett / Markedsføring / Nettside). Understrek, ingen piller. Uten JS står panelene under hverandre. */
+.faner{display:flex;flex-wrap:wrap;gap:0 28px;border-bottom:1px solid var(--linje);margin:0 0 32px}
+.faner button{font:inherit;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;padding:12px 0;margin:0 0 -1px;color:var(--tekst-dempet);cursor:pointer}
+.faner button:hover{color:var(--aksent)}
+.faner button[aria-selected="true"]{color:var(--aksent);border-bottom-color:var(--aksent)}
+.faner button:focus-visible,.fanepanel:focus-visible{outline:2px solid var(--aksent);outline-offset:4px}
+.faner[hidden]~.fanepanel+.fanepanel{margin-top:72px}
+@media (max-width:419px){.faner{gap:0 16px}.faner button{font-size:1rem}}
+.fanepanel-tittel{font-size:1.375rem;margin:0 0 8px}
+.fanepanel-ingress{color:var(--tekst-dempet);margin:0 0 32px;max-width:760px}
+.pakke-navn{font-family:var(--overskrift);font-weight:600;font-size:1.375rem;line-height:1.3;margin:0}
+.pakke-hver{font-size:1rem;color:var(--tekst-dempet);margin:0 0 12px}
+.eksempel--bred img{max-width:100%}
+
+/* ---- Løft 23.11: marine bånd øverst og nederst, ingen kursiv, større overskrift ---- */
+.seksjon--hero,.seksjon--cta{background:var(--aksent);color:#fff;border-top:0}
+.seksjon--hero h1,.seksjon--cta h2,.seksjon--hero .etikett,.seksjon--cta p{color:#fff}
+.seksjon--hero .etikett{opacity:.8;letter-spacing:.04em;text-transform:uppercase;font-size:.8rem}
+.seksjon--hero a:not(.knapp),.seksjon--cta a:not(.knapp){color:#fff}
+.seksjon--hero .knapp--primar,.seksjon--cta .knapp--primar{background:#fff;color:var(--aksent);border-color:#fff}
+.seksjon--hero .knapp--primar:hover,.seksjon--cta .knapp--primar:hover{background:#E6ECF4}
+.seksjon--hero figcaption{color:#C9D4E4}
+.seksjon--hero .hero-bilde img{border:0}
+.seksjon--hero{padding:56px 0 72px}
+.hero-tekst h1{max-width:13ch;font-size:clamp(2.5rem,1.8rem + 3.6vw,4.5rem);line-height:1.05;letter-spacing:-.02em}
+.hero-tekst .innledning-stor,.hero-tekst p{font-size:1.25rem;color:#E6ECF4}
+@media (min-width:960px){.seksjon--hero{padding:104px 0 120px}}
+.seksjon--cta{padding:96px 0}
+.hero-tekst h1{max-width:none;font-size:clamp(2.25rem,1.6rem + 2.6vw,3.75rem)}
+@media (min-width:960px){.hero-tekst{grid-column:1 / span 7}.hero-bilde{grid-column:8 / span 5}}
