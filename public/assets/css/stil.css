@@ -600,23 +600,25 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
 .eksempler--rad{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:32px;margin-top:0}
 .eksempler--rad .eksempel video{max-width:300px}
 
-/* Forsiden: bevis rett under toppen (ett ekte sitat fra Google + kundene vi har laget nettside for). Ingen stjerner, ingen kort. */
-.seksjon--bevis{padding-top:48px;padding-bottom:48px}
-.bevis{display:grid;gap:32px;align-items:center}
+/* Forsiden og /priser: ekte omtale fra Google + kundene våre. Lys flate, logoene i farger på hvite felt (ingen runde hjørner). */
+.seksjon--bevis{padding-top:56px;padding-bottom:56px;background:var(--flate)}
+.bevis{display:grid;gap:40px;align-items:center}
 .bevis>*{min-width:0}
-@media (min-width:960px){.bevis{grid-template-columns:1fr 1fr;gap:64px}}
-.bevis-sitat{margin:0;border-left:3px solid var(--aksent);padding-left:20px}
+@media (min-width:960px){.bevis{grid-template-columns:1fr 1fr;gap:72px}}
+.bevis-vurdering{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 16px;font-size:1rem;color:var(--tekst-dempet)}
+.bevis-tall{font-family:var(--overskrift);font-weight:600;font-size:2rem;line-height:1;color:var(--tekst)}
+/* Stjernene viser bare den ekte Google-vurderingen (5,0). De står i CSS, så skjermlesere leser bare teksten ved siden av. */
+.bevis-karakter::before{content:"\2605\2605\2605\2605\2605" / "";color:#A9750F;font-size:1.25rem;letter-spacing:2px}
+.bevis-sitat{margin:0;border-left:3px solid var(--aksent);padding-left:24px}
 .bevis-sitat blockquote{margin:0}
-.bevis-sitat p{font-family:var(--overskrift);font-weight:600;font-size:clamp(1.25rem,1.1rem + .6vw,1.625rem);line-height:1.35;margin:0}
-.bevis-sitat figcaption{margin-top:8px;color:var(--tekst-dempet);font-size:1rem}
-.bevis-tittel{font-family:var(--brodtekst);font-size:1rem;font-weight:400;color:var(--tekst-dempet);margin:0 0 8px}
-.bevis-kunder ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 32px}
-.bevis-kunde{font-family:var(--overskrift);font-weight:600;font-size:1.375rem;color:var(--tekst)}
-.bevis-kunde:hover{color:var(--aksent)}
-.bevis-kunder ul{align-items:center;gap:16px 36px}
-.bevis-logo{display:block;height:56px;width:auto;max-width:200px}
-.bevis-kunde{display:block;padding:4px 0}
-.bevis-logo--rund{height:80px}
+.bevis-sitat p{font-family:var(--overskrift);font-weight:600;font-size:clamp(1.375rem,1.1rem + 1vw,2rem);line-height:1.3;margin:0}
+.bevis-sitat figcaption{margin-top:12px;color:var(--tekst-dempet);font-size:1rem}
+.bevis-tittel{font-family:var(--brodtekst);font-size:1rem;font-weight:400;color:var(--tekst-dempet);margin:0 0 12px}
+.bevis-kunder ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.bevis-kunder ul>*{min-width:0}
+.bevis-kunde{display:flex;align-items:center;justify-content:center;height:104px;padding:12px;background:var(--bakgrunn);border:1px solid var(--linje)}
+.bevis-logo{display:block;max-width:100%;max-height:56px;width:auto;height:auto}
+.bevis-logo--rund{max-height:76px}
 
 /* ---------------------------------------------------------------- Bevegelse (23.11.2026, Roberts' ønske)
    Rolig og kort: myke sideoverganger og små reaksjoner når man peker og trykker. Ingen scroll-animasjoner,
@@ -676,9 +678,11 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
 .fanepanel:not([hidden]){animation:tone-inn .3s ease both}
 @keyframes tone-inn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* Kundelogoene i farger når man peker på dem, ellers rolig grå. Søylene i grafen bytter farge mykt. */
-.bevis-logo{filter:grayscale(1);opacity:.75;transition:filter .3s,opacity .3s}
-.bevis-kunde:hover .bevis-logo,.bevis-kunde:focus-visible .bevis-logo{filter:none;opacity:1}
+/* Kundefeltene får marine kant og logoen løfter seg litt når man peker på dem. Søylene i grafen bytter farge mykt. */
+.bevis-kunde{transition:border-color .2s}
+.bevis-kunde:hover,.bevis-kunde:focus-visible{border-color:var(--aksent)}
+.bevis-logo{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.bevis-kunde:hover .bevis-logo{transform:translateY(-2px) scale(1.04)}
 .graf .stolpe{transition:fill .2s}
 
 /* Redusert bevegelse: ingen overganger eller animasjoner. */
