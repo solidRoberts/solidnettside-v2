@@ -243,12 +243,12 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
   .tjenester{grid-template-columns:1fr 1fr;gap:64px}
 }
 
-/* Pakkene på /priser: tre spalter med 2 px strek over, den anbefalte med marine ramme. Stablet på mobil i samme rekkefølge («Alt i Start, og:» må komme etter Start). */
+/* Pakkene på /priser: tre spalter med 2 px strek over, den anbefalte med marine ramme. Alle kortene har samme ramme og luft, så overskrifter og knapper står på linje. «Anbefalt» ligger på rammen. Stablet på mobil i samme rekkefølge («Alt i Start, og:» må komme etter Start). */
 .pakker{list-style:none;margin:0;padding:0;display:grid;gap:40px}
 .pakker>*{min-width:0}
-.pakke{border-top:2px solid var(--aksent);padding-top:24px;display:flex;flex-direction:column}
-.pakke--anbefalt{border:2px solid var(--aksent);padding:24px}
-.pakke--anbefalt .etikett{margin-bottom:8px}
+.pakke{position:relative;border:2px solid transparent;border-top-color:var(--aksent);padding:24px;display:flex;flex-direction:column}
+.pakke--anbefalt{border-color:var(--aksent)}
+.pakke--anbefalt .etikett{position:absolute;top:-.8em;left:16px;margin:0;padding:0 8px;background:var(--bakgrunn);line-height:1.5}
 .pakke-pris{margin:12px 0 8px}
 .pakke-belop{font-family:var(--overskrift);font-weight:600;font-size:2.25rem;line-height:1.1}
 .pakke-for{color:var(--tekst-dempet);margin:0}
