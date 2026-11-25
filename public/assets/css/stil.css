@@ -1,32 +1,32 @@
-/* Klassisk («bank/advokat», plan 5.6.1)
-   Hvit bakgrunn, mørk tekst og én dempet aksent (marine). Source Serif 4 i overskriftene, systemfont i brødteksten.
-   Strengt rutenett, tynne linjer og mye luft. Forbudslista i plan 5.6.3 gjelder og sjekkes av sjekk.mjs:
-   ingen gradienter, skygger, glød, lilla/indigo, mørke flater, animasjon, piller eller avrundede bokser. */
+/* Design A («redaksjonell», valgt av Roberts 25.11.2026)
+   Papirfarget bakgrunn, marine blekk og én blå aksent i kursiv. Source Serif 4 i overskriftene, Source Sans 3 i
+   brødteksten, tynne linjer og nummererte seksjoner på forsiden. Bygd på Klassisk, så alle sidetyper er dekket.
+   Forbudslista gjelder fortsatt og sjekkes av sjekk.mjs: ingen gradienter, skygger, glød, lilla/indigo,
+   mørke flater, piller eller runde hjørner over 4 px. Unntak: Solid-merket i 3D på forsiden (a.js + 3d.js). */
 
-@font-face{
-  font-family:"Source Serif 4";
-  src:url("/assets/fonts/source-serif-4-600-latin.woff2?v=d2ebdb22f2") format("woff2");
-  font-weight:600;font-style:normal;font-display:swap;
-}
+@font-face{font-family:"Source Serif 4";src:url("/assets/fonts/source-serif-4-latin-wght-normal.woff2?v=f80eac9930") format("woff2");font-weight:200 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Source Serif 4";src:url("/assets/fonts/source-serif-4-latin-wght-italic.woff2?v=7644ea3307") format("woff2");font-weight:200 900;font-style:italic;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url("/assets/fonts/source-sans-3-latin-wght-normal.woff2?v=114a0e5e16") format("woff2");font-weight:200 900;font-style:normal;font-display:swap}
 
 :root{
-  --bakgrunn:#FFFFFF;
-  --flate:#F4F5F7;          /* FAQ-seksjonen og footeren */
-  --tekst:#1B2230;          /* 15,9:1 på hvit */
-  --tekst-dempet:#4A5363;   /* 7,8:1 på hvit, 7,1:1 på flate */
-  --aksent:#1F3A5F;         /* marine: knapp, lenker, fokus, aksentstreker. 11,5:1 på hvit */
-  --aksent-hover:#152A47;
-  --linje:#D9DDE3;          /* bare dekor */
-  --feltkant:#6B7280;       /* 4,8:1, UI-grense rundt felt */
-  --feil:#A12A2A;           /* 7,3:1 */
-  --paa-aksent:#FFFFFF;     /* tekst på den fylte knappen, 11,5:1 */
+  --bakgrunn:#F3F0E8;       /* papir */
+  --flate:#FBFAF6;          /* kort, FAQ og footer: lysere papir */
+  --tekst:#14213D;          /* marine blekk (logoen), 14,6:1 på papir */
+  --tekst-dempet:#4F5869;   /* 6,4:1 på papir */
+  --aksent:#14213D;         /* knapper, streker og fokus */
+  --aksent-hover:#1D5FBF;
+  --blaa:#1D5FBF;           /* kursiv utheving i overskrifter og lenker i tall, 5,6:1 på papir (tone 216°, ikke indigo) */
+  --linje:#D8D3C7;          /* bare dekor */
+  --feltkant:#6B7280;
+  --feil:#A12A2A;
+  --paa-aksent:#FFFFFF;
   --overskrift:"Source Serif 4",Georgia,"Times New Roman",serif;
-  --brodtekst:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --brodtekst:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --marg:24px;
   --luft:64px;
 }
 @media (min-width:960px){
-  :root{--marg:48px;--luft:96px}
+  :root{--marg:48px;--luft:104px}
 }
 
 /* ---------------------------------------------------------------- Grunnlag */
@@ -38,7 +38,7 @@ body{
   overflow-wrap:anywhere;
 }
 img{max-width:100%;height:auto;display:block}
-h1,h2,h3{font-family:var(--overskrift);font-weight:600;color:var(--tekst);margin:0}
+h1,h2,h3{font-family:var(--overskrift);font-weight:600;color:var(--tekst);margin:0;letter-spacing:-.015em}
 
 /* Reflow (WCAG 1.4.10 og 1.4.12): et ord som er bredere enn skjermen («Personvernerklæring» i serif på 320 px,
    eller et langt navn i kvitteringen) skal brytes, ikke gjøre siden bredere enn skjermen.
@@ -54,11 +54,11 @@ h1,h2,h3,summary,legend{overflow-wrap:anywhere}
 }
 .hero-rutenett>*,.sidehode-rutenett>*,.bransjelinje>*,.tjenester>*,.tjenesteliste>*,.grunner>*,.fordeler>*,
 .seksjon--prosess .beholder>*,.seksjon--faq .beholder>*,.steg>*,.prosjekt>*,.personstripe>*,.personer>*,
-.faktaboks dl div>*,.skjermbilder>*,.kontaktvalg>*,.skjemafelt-rutenett>*,.sidebunn-rutenett>*,.teaser--med-bilde>*{min-width:0}
+.faktaboks dl div>*,.skjermbilder>*,.kontaktvalg>*,.skjemafelt-rutenett>*,.sidebunn-rutenett>*,.teaser--med-bilde>*,.side-index .seksjon-hode>*,.side-index .seksjon--faq .seksjon-hode>*{min-width:0}
 h1{font-size:clamp(2.25rem,1.6rem + 2.6vw,3.5rem);line-height:1.12;letter-spacing:-.01em}
 h2{font-size:clamp(1.75rem,1.4rem + 1.4vw,2.5rem);line-height:1.2}
 h3{font-size:1.375rem;line-height:1.3}
-h1 em,h2 em,h3 em{font-style:normal}
+h1 em,h2 em,h3 em{font-style:italic;font-weight:400;color:var(--blaa)}
 p,ul,ol,dl,figure,address,blockquote{margin:0}
 p{max-width:68ch}
 p + p{margin-top:1em}
@@ -579,23 +579,6 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
 .pakke-hver{font-size:1rem;color:var(--tekst-dempet);margin:0 0 12px}
 .eksempel--bred img{max-width:100%}
 
-/* ---- Løft 23.11: marine bånd øverst og nederst, ingen kursiv, større overskrift ---- */
-.seksjon--hero,.seksjon--cta{background:var(--aksent);color:#fff;border-top:0}
-.seksjon--hero h1,.seksjon--cta h2,.seksjon--hero .etikett,.seksjon--cta p{color:#fff}
-.seksjon--hero .etikett{opacity:.8;letter-spacing:.04em;text-transform:uppercase;font-size:.8rem}
-.seksjon--hero a:not(.knapp),.seksjon--cta a:not(.knapp){color:#fff}
-.seksjon--hero .knapp--primar,.seksjon--cta .knapp--primar{background:#fff;color:var(--aksent);border-color:#fff}
-.seksjon--hero .knapp--primar:hover,.seksjon--cta .knapp--primar:hover{background:#E6ECF4}
-.seksjon--hero figcaption{color:#C9D4E4}
-.seksjon--hero .hero-bilde img{border:0}
-.seksjon--hero{padding:56px 0 72px}
-.hero-tekst h1{max-width:13ch;font-size:clamp(2.5rem,1.8rem + 3.6vw,4.5rem);line-height:1.05;letter-spacing:-.02em}
-.hero-tekst .innledning-stor,.hero-tekst p{font-size:1.25rem;color:#E6ECF4}
-@media (min-width:960px){.seksjon--hero{padding:104px 0 120px}}
-.seksjon--cta{padding:96px 0}
-.hero-tekst h1{max-width:none;font-size:clamp(2.25rem,1.6rem + 2.6vw,3.75rem)}
-@media (min-width:960px){.hero-tekst{grid-column:1 / span 7}.hero-bilde{grid-column:8 / span 5}}
-
 /* Videoer vi har laget: tre (eller flere) stående videoer side om side */
 .eksempler--rad{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:32px;margin-top:0}
 .eksempler--rad .eksempel video{max-width:300px}
@@ -619,6 +602,132 @@ figcaption{margin-top:12px;font-size:.95rem;line-height:1.5;color:var(--tekst-de
 .bevis-kunde{display:flex;align-items:center;justify-content:center;height:104px;padding:12px;background:var(--bakgrunn);border:1px solid var(--linje)}
 .bevis-logo{display:block;max-width:100%;max-height:56px;width:auto;height:auto}
 .bevis-logo--rund{max-height:76px}
+
+/* ================================================================ Design A */
+
+/* Forsidetoppen: tekst til venstre, Solid-merket (3D) til høyre. Lys, ingen bånd. */
+.seksjon--hero{padding:32px 0 48px;border-top:0}
+.hero-tekst .etikett{display:flex;align-items:center;gap:12px;margin-bottom:20px;font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.hero-tekst .etikett::before{content:"";width:40px;border-top:1.5px solid currentColor}
+.hero-tekst h1{font-size:clamp(2.5rem,1.3rem + 4.6vw,4.75rem);line-height:1.04;letter-spacing:-.025em;max-width:14ch}
+.hero-tekst .innledning-stor{max-width:36ch}
+.hero-merke{position:relative;aspect-ratio:16 / 10}
+.merke-reserve{position:absolute;left:50%;top:50%;width:auto;height:78%;transform:translate(-50%,-50%);transition:opacity .4s}
+.hero-merke canvas{position:absolute;inset:0;width:100%!important;height:100%!important;opacity:0;transition:opacity .4s;touch-action:pan-y;cursor:grab}
+.hero-merke canvas:active{cursor:grabbing}
+.hero-merke.klar canvas{opacity:1}
+.hero-merke.klar .merke-reserve{opacity:0}
+@media (min-width:960px){
+  .seksjon--hero{padding:56px 0 72px}
+  .hero-rutenett{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center}
+  .hero-tekst{grid-column:1 / span 7}
+  .hero-merke{grid-column:8 / span 5;aspect-ratio:4 / 4.3}
+}
+
+/* Forsiden: nummererte seksjoner med en strek over overskriften, som i et magasin */
+.side-index main{counter-reset:seksjon}
+.side-index .seksjon + .seksjon{border-top:0}
+.side-index .seksjon:not(.seksjon--hero):not(.seksjon--bevis){padding-top:calc(var(--luft) * .7)}
+.side-index .seksjon-hode{max-width:none;display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--tekst);padding-top:14px}
+.side-index .seksjon-hode>*{min-width:0}
+.side-index .seksjon-hode::before{counter-increment:seksjon;content:counter(seksjon,decimal-leading-zero);font-family:var(--overskrift);font-size:.95rem;color:var(--tekst-dempet);font-variant-numeric:tabular-nums;margin-bottom:6px}
+.side-index .seksjon-hode h2{max-width:22ch;font-size:clamp(2rem,1.4rem + 2.2vw,3.25rem);line-height:1.06}
+.side-index .seksjon-hode .innledning{max-width:60ch}
+@media (min-width:720px){
+  .side-index .seksjon-hode{grid-template-columns:4.5rem minmax(0,1fr);column-gap:16px}
+  .side-index .seksjon-hode::before{grid-row:1 / span 3;margin:0;padding-top:.6em}
+  .side-index .seksjon-hode>*{grid-column:2}
+}
+@media (min-width:960px){
+  .side-index .seksjon--faq .seksjon-hode{grid-template-columns:minmax(0,1fr)}
+  .side-index .seksjon--faq .seksjon-hode::before{grid-row:auto;padding:0;margin-bottom:6px}
+  .side-index .seksjon--faq .seksjon-hode>*{grid-column:1}
+}
+
+/* Prosjektene: liste med kundens logo. Hele raden er en lenke. Logoen får farge når man peker. */
+.indeks{list-style:none;margin:0;padding:0;border-top:1px solid var(--tekst)}
+.indeks li{border-bottom:1px solid var(--linje)}
+.indeks-rad{
+  display:grid;grid-template-columns:4.75rem minmax(0,1fr);grid-template-areas:"merke navn" "merke m1" "merke m2";
+  column-gap:16px;row-gap:2px;align-items:center;padding:18px 0;color:var(--tekst);text-decoration:none;transition:background-color .25s
+}
+.indeks-rad>*{min-width:0}
+.indeks-merke{grid-area:merke;display:flex;align-items:center;justify-content:flex-start;height:56px}
+.indeks-navn{grid-area:navn;font-family:var(--overskrift);font-weight:600;font-size:clamp(1.375rem,1.1rem + 1.4vw,2.25rem);line-height:1.1;letter-spacing:-.015em}
+.indeks-rad>:nth-child(3){grid-area:m1}
+.indeks-rad>:nth-child(4){grid-area:m2}
+.indeks-meta{color:var(--tekst-dempet);font-size:1rem;line-height:1.4}
+.indeks-logo{display:block;width:auto;height:auto;max-width:100%;max-height:40px;filter:grayscale(1);opacity:.8;transition:filter .25s,opacity .25s,transform .25s}
+.indeks-logo--rund{max-height:56px}
+.indeks-logo--tekst{font-family:var(--overskrift);font-weight:600;font-size:1rem;line-height:1.1;color:var(--tekst)}
+.indeks-rad:hover,.indeks-rad:focus-visible{background:var(--flate)}
+.indeks-rad:hover .indeks-logo,.indeks-rad:focus-visible .indeks-logo{filter:none;opacity:1;transform:scale(1.04)}
+@media (min-width:880px){
+  .indeks-rad{grid-template-columns:9rem minmax(0,1.3fr) minmax(0,1fr) minmax(0,.8fr) 2rem;grid-template-areas:"merke navn m1 m2 pil";column-gap:24px;padding:22px 12px 22px 0}
+  .indeks-rad::after{grid-area:pil;content:"\2192";content:"\2192" / "";font-size:1.5rem;justify-self:end;transition:transform .2s}
+  .indeks-rad:hover::after{transform:translateX(4px)}
+  .indeks-logo{max-height:48px;max-width:8rem}
+  .indeks-logo--rund{max-height:64px}
+}
+/* Bildet som følger musa (a.js). Bare med mus, aldri på telefon. */
+.indeks-forhand{position:fixed;left:0;top:0;z-index:30;width:280px;aspect-ratio:16 / 10;overflow:hidden;border:1px solid var(--tekst);background:var(--flate);opacity:0;pointer-events:none;transition:opacity .2s,transform .15s linear}
+.indeks-forhand.vis{opacity:1}
+.indeks-forhand img{width:100%;height:100%;object-fit:cover;object-position:top}
+
+/* Henvendelser fra en kundes nettside (NS Service) */
+.henv-tall{display:grid;gap:16px;margin:0 0 40px}
+.henv-tall>*{min-width:0}
+.henv-tall div{border-top:2px solid var(--tekst);padding-top:10px;display:flex;flex-direction:column-reverse;justify-content:flex-end}
+.henv-tall div:first-child{border-top-color:var(--blaa)}
+.henv-tall dt{color:var(--tekst-dempet);font-size:1rem;line-height:1.4;max-width:28ch}
+.henv-tall dd{margin:0 0 6px;font-family:var(--overskrift);font-weight:600;font-size:clamp(2.75rem,2rem + 2.6vw,4rem);line-height:1;font-variant-numeric:tabular-nums}
+@media (min-width:720px){.henv-tall{grid-template-columns:repeat(3,1fr);gap:32px}}
+.henv-tittel{font-family:var(--overskrift);font-weight:600;font-size:1.25rem;margin:0 0 12px}
+.henv-graf{max-width:760px;margin-bottom:40px}
+.henv-stolpe{display:block;width:100%;height:auto}
+.henv-stolpe text{font-family:var(--brodtekst);font-size:17px;font-weight:600;fill:#FFFFFF}
+.kilde-sok rect{fill:var(--blaa)}
+.kilde-ann rect{fill:var(--tekst)}
+.kilde-dir rect{fill:#5F6675}
+.kilde-ai rect{fill:#A4AAB6}
+.kilde-ukj rect{fill:#CDD1D8}
+.kilde-ai text,.kilde-ukj text{fill:var(--tekst)}
+.henv-forklaring{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 20px;font-size:1rem;color:var(--tekst-dempet)}
+.henv-farge{display:inline-block;width:0;height:0;border:7px solid var(--linje);margin-right:8px;vertical-align:-1px}
+.henv-farge.kilde-sok{border-color:var(--blaa)}
+.henv-farge.kilde-ann{border-color:var(--tekst)}
+.henv-farge.kilde-dir{border-color:#5F6675}
+.henv-farge.kilde-ai{border-color:#A4AAB6}
+.henv-farge.kilde-ukj{border-color:#CDD1D8}
+.henv-logg{list-style:none;margin:0;padding:0;border-top:1px solid var(--tekst);max-width:900px}
+.henv-logg li{display:grid;grid-template-columns:4.5rem minmax(0,1fr);column-gap:16px;padding:12px 0;border-bottom:1px solid var(--linje);align-items:baseline}
+.henv-logg li>*{min-width:0}
+.henv-dato{grid-row:span 3;color:var(--tekst-dempet);font-variant-numeric:tabular-nums}
+.henv-gjelder{font-weight:600}
+.henv-kilde,.henv-type{font-size:1rem;color:var(--tekst-dempet)}
+.henv-kilde--sok{color:var(--blaa);font-weight:600}
+@media (min-width:720px){
+  .henv-logg li{grid-template-columns:5rem minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);column-gap:24px}
+  .henv-dato{grid-row:auto}
+}
+
+/* «Du snakker direkte med oss»: portrett og kontakt side om side */
+.om-roberts{display:grid;gap:24px;align-items:end}
+.om-roberts>*{min-width:0}
+.om-bilde .portrett{width:100%;max-width:300px;aspect-ratio:4 / 5;object-fit:cover;margin:0}
+.om-tekst .person-navn{font-family:var(--overskrift);font-weight:600;font-size:1.5rem;margin:0}
+@media (min-width:720px){.om-roberts{grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:48px}}
+
+/* Resultatgrafen (Snurr og Søtt) i blått */
+.graf .er-med .stolpe{fill:var(--blaa)}
+.graf .soyle:hover .stolpe{fill:var(--tekst)}
+
+/* Toppen toner rolig inn når siden åpnes. */
+.hero-tekst>*{animation:a-opp .5s cubic-bezier(.2,.75,.2,1) both}
+.hero-tekst>:nth-child(2){animation-delay:.06s}
+.hero-tekst>:nth-child(3){animation-delay:.12s}
+.hero-tekst>:nth-child(4){animation-delay:.18s}
+@keyframes a-opp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* ---------------------------------------------------------------- Bevegelse (23.11.2026, Roberts' ønske)
    Rolig og kort: myke sideoverganger og små reaksjoner når man peker og trykker. Ingen scroll-animasjoner,
